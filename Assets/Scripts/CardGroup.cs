@@ -9,26 +9,31 @@ public class CardGroup : MonoBehaviour
     [SerializeField] private GameObject cardSlotPrefab;
 
     private RectTransform rectTransform;
-    private List<GameObject> cards;
-    private Card draggedCard;
-    private Card hoveredCard;
+    private List<GameObject> cardSlots;
+
+    [Header("Dragged Card")]
+    [SerializeField] private Card draggedCard;
+    [SerializeField] private int draggedCardIndex = -1;
+    [SerializeField] private Card hoveredCard;
+
+    private bool swappingCards = false;
 
     // Start is called before the first frame update
     void Start()
     {
         rectTransform = GetComponent<RectTransform>();
-        cards = new List<GameObject>();
-        cards.Add(Instantiate(cardSlotPrefab, transform));
-        cards.Add(Instantiate(cardSlotPrefab, transform));
-        cards.Add(Instantiate(cardSlotPrefab, transform));
-        cards.Add(Instantiate(cardSlotPrefab, transform));
+        cardSlots = new List<GameObject>();
+        cardSlots.Add(Instantiate(cardSlotPrefab, transform));
+        cardSlots.Add(Instantiate(cardSlotPrefab, transform));
+        cardSlots.Add(Instantiate(cardSlotPrefab, transform));
+        cardSlots.Add(Instantiate(cardSlotPrefab, transform));
 
-        foreach (GameObject card in cards)
+        foreach (GameObject cardSlot in cardSlots)
         {
-            card.GetComponent<Card>().PointerEnterEvent.AddListener(HoverEnter);
-            card.GetComponent<Card>().PointerExitEvent.AddListener(HoverExit);
-            card.GetComponent<Card>().BeginDragEvent.AddListener(BeginDrag);
-            card.GetComponent<Card>().EndDragEvent.AddListener(EndDrag);
+            cardSlot.GetComponentInChildren<Card>().PointerEnterEvent.AddListener(HoverEnter);
+            cardSlot.GetComponentInChildren<Card>().PointerExitEvent.AddListener(HoverExit);
+            cardSlot.GetComponentInChildren<Card>().BeginDragEvent.AddListener(BeginDrag);
+            cardSlot.GetComponentInChildren<Card>().EndDragEvent.AddListener(EndDrag);
         }
     }
 
@@ -36,28 +41,58 @@ public class CardGroup : MonoBehaviour
     void Update()
     {
         PositionCards();
+        CheckDraggedCard();
     }
 
     private void PositionCards()
     {
-        float partition = rectTransform.rect.width * (1.0f / (float)(cards.Count + 1));
-        for (int i = 0; i < cards.Count; i++)
+        float partition = rectTransform.rect.width * (1.0f / (float)(cardSlots.Count + 1));
+        for (int i = 0; i < cardSlots.Count; i++)
         {
-            cards[i].transform.localPosition = new Vector2(
+            cardSlots[i].transform.localPosition = new Vector2(
                 (rectTransform.rect.width * -0.5f) + (partition * (i + 1)),
                 0
             );
         }
     }
 
+    private void CheckDraggedCard()
+    {
+        if (draggedCard == null || swappingCards)
+            return;
+
+        for (int i = 0; i < cardSlots.Count; i++)
+        {
+            Card currentCard = cardSlots[i].GetComponentInChildren<Card>();
+            if (draggedCard.transform.position.x > currentCard.transform.position.x
+                && draggedCardIndex < i)
+            {
+                Debug.Log("Should swap to right.");
+            }
+
+            if (draggedCard.transform.position.x < currentCard.transform.position.x
+                && draggedCardIndex > i)
+            {
+                Debug.Log("Should swap to left.");
+            }
+        }
+    }
+
+    private void Swap(int index)
+    {
+
+    }
+
     private void BeginDrag(Card card)
     {
         draggedCard = card;
+        draggedCardIndex = CardIndex(card);
     }
 
     void EndDrag(Card card)
     {
         draggedCard = null;
+        draggedCardIndex = -1;
     }
 
     void HoverEnter(Card card)
@@ -68,5 +103,17 @@ public class CardGroup : MonoBehaviour
     void HoverExit(Card card)
     {
         hoveredCard = null;
+    }
+
+    int CardIndex(Card card)
+    {
+        for (int i = 0; i < cardSlots.Count; i++)
+        {
+            if (cardSlots[i].GetComponentInChildren<Card>() == card)
+            {
+                return i;
+            }
+        }
+        return -1;
     }
 }
