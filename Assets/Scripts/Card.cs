@@ -74,7 +74,7 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
         isDragging = false;
 
         StartCoroutine(FrameWait());
-        transform.localPosition = Vector2.zero;
+        ResetPosition();
 
         IEnumerator FrameWait()
         {
@@ -101,5 +101,10 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
 
     private void OnDestroy()
     {
+    }
+
+    public void ResetPosition()
+    {
+        transform.localPosition = Vector2.zero;
     }
 }
