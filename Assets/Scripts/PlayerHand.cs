@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class CardGroup : MonoBehaviour
+public class PlayerHand : MonoBehaviour
 {
     [Header("Cards to Spawn")]
     [SerializeField] private GameObject cardSlotPrefab;
@@ -36,16 +36,17 @@ public class CardGroup : MonoBehaviour
             cardSlot.GetComponentInChildren<Card>().EndDragEvent.AddListener(EndDrag);
         }
 
-        PositionCards();
+        PositionSlots();
     }
 
     // Update is called once per frame
     void Update()
     {
+        PositionSlots();
         CheckDraggedCard();
     }
 
-    private void PositionCards()
+    private void PositionSlots()
     {
         if (swappingCards)
             return;
@@ -64,14 +65,13 @@ public class CardGroup : MonoBehaviour
     {
         if (draggedCard == null || swappingCards)
             return;
-        // Note: try to swap parents of cards instead of positions to make the swapping less jank
+
         for (int i = 0; i < cardSlots.Count; i++)
         {
             Card currentCard = cardSlots[i].GetComponentInChildren<Card>();
             if (draggedCard.transform.position.x > currentCard.transform.position.x
                 && draggedCardIndex < i)
             {
-                Debug.Log(i);
                 Swap(i);
                 break;
             }
@@ -79,7 +79,6 @@ public class CardGroup : MonoBehaviour
             if (draggedCard.transform.position.x < currentCard.transform.position.x
                 && draggedCardIndex > i)
             {
-                Debug.Log(i);
                 Swap(i);
                 break;
             }
@@ -89,31 +88,33 @@ public class CardGroup : MonoBehaviour
     private void Swap(int index)
     {
         swappingCards = true;
-        GameObject draggedSlot = cardSlots[draggedCardIndex];
+        Card draggedCard = cardSlots[draggedCardIndex].GetComponentInChildren<Card>();
 
         if (draggedCardIndex < index)
         {
             for (int i = draggedCardIndex; i < index; i++)
             {
-                Debug.Log("bruh right");
-                cardSlots[i] = cardSlots[i + 1];
+                Card currentCard = cardSlots[i + 1].GetComponentInChildren<Card>();
+                currentCard.transform.SetParent(cardSlots[i].transform);
+                currentCard.ResetPosition();
             }
         }
         else if (draggedCardIndex > index)
         {
             for (int i = draggedCardIndex; i > index; i--)
             {
-                Debug.Log("bruh left");
-                cardSlots[i] = cardSlots[i - 1];
+                Card currentCard = cardSlots[i - 1].GetComponentInChildren<Card>();
+                currentCard.transform.SetParent(cardSlots[i].transform);
+                currentCard.ResetPosition();
             }
         }
 
-        cardSlots[index] = draggedSlot;
+        draggedCard.transform.SetParent(cardSlots[index].transform);
         draggedCardIndex = index;
 
         swappingCards = false;
 
-        PositionCards();
+        //PositionSlots();
     }
 
     private void BeginDrag(Card card)
