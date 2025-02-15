@@ -17,7 +17,7 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
 
     [Header("Selection")]
     public bool selected;
-    public float selectionOffset = 10;
+    private float selectionOffset = 50;
     private float pointerDownTime;
     private float pointerUpTime;
 
@@ -91,11 +91,20 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
     {
     }
 
-    public void OnPointerUp(PointerEventData eventData)
+    public void OnPointerDown(PointerEventData eventData)
     {
+        if (selected)
+        {
+            selected = false;
+        }
+        else
+        {
+            selected = true;
+        }
+        ResetPosition();
     }
 
-    public void OnPointerDown(PointerEventData eventData)
+    public void OnPointerUp(PointerEventData eventData)
     {
     }
 
@@ -105,6 +114,14 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
 
     public void ResetPosition()
     {
-        transform.localPosition = Vector2.zero;
+        if (selected)
+        {
+            transform.localPosition = Vector2.zero + new Vector2(0, selectionOffset);
+        }
+        else
+        {
+            transform.localPosition = Vector2.zero;
+        }
+        
     }
 }
