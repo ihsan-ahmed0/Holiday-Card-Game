@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerHand : MonoBehaviour
 {
@@ -46,7 +47,45 @@ public class PlayerHand : MonoBehaviour
         CheckDraggedCard();
     }
 
-    private void PositionSlots()
+    public void AddCard()
+    {
+        GameObject newCardSlot = Instantiate(cardSlotPrefab, transform);
+        newCardSlot.GetComponentInChildren<Card>().PointerEnterEvent.AddListener(HoverEnter);
+        newCardSlot.GetComponentInChildren<Card>().PointerExitEvent.AddListener(HoverExit);
+        newCardSlot.GetComponentInChildren<Card>().BeginDragEvent.AddListener(BeginDrag);
+        newCardSlot.GetComponentInChildren<Card>().EndDragEvent.AddListener(EndDrag);
+        cardSlots.Add(newCardSlot);
+        PositionSlots();
+    }
+
+    public GameObject RemoveCard()
+    {
+        return null;
+    }
+
+    public List<GameObject> PlayCards()
+    {
+        List<GameObject> selectedCards = new List<GameObject>();
+        int numCards = cardSlots.Count;
+
+        for (int i = 0; i < numCards;)
+        {
+            if (cardSlots[i].GetComponentInChildren<Card>().IsSelected())
+            {
+                selectedCards.Add(cardSlots[i]);
+                cardSlots.Remove(cardSlots[i]);
+                numCards = cardSlots.Count;
+            }
+            else
+            {
+                i++;
+            }
+        }
+
+        return selectedCards;
+    }
+
+    public void PositionSlots()
     {
         if (swappingCards)
             return;

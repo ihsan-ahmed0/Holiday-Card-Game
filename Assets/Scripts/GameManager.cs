@@ -2,24 +2,43 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 
 public class GameManager : MonoBehaviour
 {
-    public int currentPoints = 0;
-    public int goalPoints = 100;
-    public float goalPointIncrements = 1.5f;
-    public int turn = 0;
-    public GameObject loseCanvas;
-    public TMP_Text currentPointsText;
-    public TMP_Text goalPointsText; 
+    [Header("Game Data")]
+    [SerializeField] private int currentPoints = 0;
+    [SerializeField] private int goalPoints = 100;
+    [SerializeField] private float goalPointIncrements = 1.5f;
+    [SerializeField] private int turn = 0;
+
+    [Header("UI Elements")]
+    [SerializeField] private GameObject loseCanvas;
+    [SerializeField] private TMP_Text currentPointsText;
+    [SerializeField] private TMP_Text goalPointsText;
+    [SerializeField] private Button addCardButton;
+    [SerializeField] private Button playCardsButton;
+
+    [Header("Card Groups")]
+    [SerializeField] private GameObject playerHandObject;
+    [SerializeField] private GameObject cardSlotsObject;
+
+    private PlayerHand playerHand;
+    private CardSlots cardSlots;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        reset();
+        Reset();
         updatePoints();
+
+        addCardButton.onClick.AddListener(OnAddButtonClick);
+        playCardsButton.onClick.AddListener(OnPlayButtonClick);
+
+        playerHand = playerHandObject.GetComponent<PlayerHand>();
+        cardSlots = cardSlotsObject.GetComponent<CardSlots>();
     }
 
     // Update is called once per frame
@@ -54,7 +73,7 @@ public class GameManager : MonoBehaviour
         currentPoints = Mathf.CeilToInt(currentPoints * x);
     }
 
-    public void reset()
+    public void Reset()
     {
         currentPoints = 0;
         goalPoints = 100;
@@ -85,5 +104,32 @@ public class GameManager : MonoBehaviour
     {
         currentPointsText.text = "Points: " + currentPoints;
         goalPointsText.text = "Goal: " + goalPoints;
+    }
+
+    private void DrawCard()
+    {
+        playerHand.AddCard();
+    }
+
+    private void PlayCardsFromHand()
+    {
+        List<GameObject> playedCards = playerHand.PlayCards();
+
+        playedCards.ForEach(cardSlot =>
+        {
+            Destroy(cardSlot);
+        });
+
+        playerHand.PositionSlots();
+    }
+
+    private void OnPlayButtonClick()
+    {
+        PlayCardsFromHand();
+    }
+
+    private void OnAddButtonClick()
+    {
+        DrawCard();
     }
 }

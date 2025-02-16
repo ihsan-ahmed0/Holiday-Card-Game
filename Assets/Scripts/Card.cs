@@ -16,7 +16,7 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
     [SerializeField] private float moveSpeedLimit = 5000;
 
     [Header("Selection")]
-    public bool selected;
+    [HideInInspector] private bool selected;
     private float selectionOffset = 50;
     private float pointerDownTime;
     private float pointerUpTime;
@@ -93,20 +93,26 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (selected)
-        {
-            selected = false;
-        }
-        else
-        {
-            selected = true;
-        }
-        ResetPosition();
+        if (eventData.button != PointerEventData.InputButton.Left)
+            return;
+
+        PointerDownEvent.Invoke(this);
+        pointerDownTime = Time.time;
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
+        pointerUpTime = Time.time;
+        PointerUpEvent.Invoke(this, pointerUpTime - pointerDownTime > .2f);
+
+        if (pointerUpTime - pointerDownTime > .2f || wasDragged)
+            return;
+
+        selected = !selected;
+        ResetPosition();
     }
+
+    public bool IsSelected() {  return selected; }
 
     private void OnDestroy()
     {
