@@ -115,10 +115,7 @@ public class GameManager : MonoBehaviour
     {
         List<GameObject> playedCards = playerHand.PlayCards();
 
-        playedCards.ForEach(cardSlot =>
-        {
-            Destroy(cardSlot);
-        });
+        cardSlots.AddCards(playedCards);
 
         playerHand.PositionSlots();
     }

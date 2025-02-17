@@ -12,7 +12,7 @@ public class PlayerHand : MonoBehaviour
     private RectTransform rectTransform;
     private List<GameObject> cardSlots;
 
-    [Header("Dragged Card")]
+    [Header("Card Interactions")]
     [SerializeField] private Card draggedCard;
     [SerializeField] private int draggedCardIndex = -1;
     [SerializeField] private Card hoveredCard;
@@ -72,6 +72,11 @@ public class PlayerHand : MonoBehaviour
         {
             if (cardSlots[i].GetComponentInChildren<Card>().IsSelected())
             {
+                cardSlots[i].GetComponentInChildren<Card>().PointerEnterEvent.RemoveListener(HoverEnter);
+                cardSlots[i].GetComponentInChildren<Card>().PointerExitEvent.RemoveListener(HoverExit);
+                cardSlots[i].GetComponentInChildren<Card>().BeginDragEvent.RemoveListener(BeginDrag);
+                cardSlots[i].GetComponentInChildren<Card>().EndDragEvent.RemoveListener(EndDrag);
+
                 selectedCards.Add(cardSlots[i]);
                 cardSlots.Remove(cardSlots[i]);
                 numCards = cardSlots.Count;
@@ -161,24 +166,24 @@ public class PlayerHand : MonoBehaviour
         draggedCard = card;
         draggedCardIndex = CardIndex(card);
     }
-
-    void EndDrag(Card card)
+    
+    private void EndDrag(Card card)
     {
         draggedCard = null;
         draggedCardIndex = -1;
     }
 
-    void HoverEnter(Card card)
+    private void HoverEnter(Card card)
     {
         hoveredCard = card;
     }
 
-    void HoverExit(Card card)
+    private void HoverExit(Card card)
     {
         hoveredCard = null;
     }
 
-    int CardIndex(Card card)
+    private int CardIndex(Card card)
     {
         for (int i = 0; i < cardSlots.Count; i++)
         {
