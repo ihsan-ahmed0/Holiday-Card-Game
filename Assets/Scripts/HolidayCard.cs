@@ -41,5 +41,12 @@ public enum CardName
     Boogeyman,
     Pilgrimage,
     Turkey,
-    Pumpkin
+    Pumpkin,
+    Snowflake,
+    Stuffing,
+    Bobsled,
+    BunnyHop,
+    Reindeer,
+    Zombie,
+    Cornucopia
 }

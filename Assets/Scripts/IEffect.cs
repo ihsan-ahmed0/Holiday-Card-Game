@@ -1,6 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Unity.Collections.LowLevel.Unsafe;
+using Unity.VisualScripting;
 
 public interface IEffect
 {
@@ -8,15 +7,15 @@ public interface IEffect
     public void PlayedEffect();
     // effect is only triggered when card is Held in hand
     public void HeldEffect();
-} 
+}
 
 public struct EasterEggEffect : IEffect
 {
     public void HeldEffect()
     {
         // Easter egg multiplies total score by x1.5
-       // retrieve totalScore from whatever handles points
-       // int score = Mathf.RoundToInt(totalScore * 1.5f);
+        // retrieve totalScore from whatever handles points
+        // int score = Mathf.RoundToInt(totalScore * 1.5f);
     }
 
     public void PlayedEffect()
@@ -64,7 +63,8 @@ public struct BoogeymanEffect : IEffect
             {
                 // add 100 points to played score
             }
-            else {
+            else
+            {
                 // subtract 100 points from score
             }
         }
@@ -88,7 +88,7 @@ public struct PilgrimageEffect : IEffect
     // gives Turkey a + 300 to base score
     public void PlayedEffect()
     {
-        foreach ( var card in HandManager.Instance.heldCards)
+        foreach (var card in HandManager.Instance.heldCards)
         {
             int points = (card.cardName == CardName.Turkey) ? 300 : 100;
             card.basePts += points;
@@ -105,7 +105,8 @@ public struct TurkeyEffect : IEffect
         // effect is stackable with multiple turkey cards
         foreach (var card in HandManager.Instance.GetPlayedCards())
         {
-            if(card.cardName == CardName.Turkey) {
+            if (card.cardName == CardName.Turkey)
+            {
                 card.basePts += 50;
             }
         }
@@ -137,3 +138,200 @@ public struct PumpkinEffect : IEffect
         //scores whatever points are left on the card
     }
 }
+
+public struct SnowflakeEffect : IEffect
+{
+    public void HeldEffect()
+    {
+        foreach (var card in HandManager.Instance.GetPlayedCards())
+        {
+            if (card.GetCardType() == CardType.Christmas)
+            {
+                // add 100 points to score total for each christmas card
+            }
+        }
+    }
+
+    public void PlayedEffect()
+    {
+        return;
+    }
+}
+
+public struct StuffingEffect : IEffect
+{
+    public void HeldEffect()
+    {
+        return;
+    }
+
+    public void PlayedEffect()
+    {
+        //add 50 points to total
+
+        foreach (var card in HandManager.Instance.GetPlayedCards())
+        {
+            if (card.cardName == CardName.Turkey)
+            {
+                //add 100 additional points to total
+            }
+        }
+    }
+}
+
+public struct BobsledEffect : IEffect
+{
+    public void HeldEffect()
+    {
+        return;
+    }
+
+    public void PlayedEffect()
+    {
+        //add 50 pts to total
+        //and reduce the point total requirement of this turn by 500
+    }
+}
+
+public struct BunnyHopEffect : IEffect
+{
+    public void HeldEffect()
+    {
+        return;
+    }
+
+    public void PlayedEffect()
+    {
+        //all played easter cards will re-trigger their played effect!
+        foreach (var card in HandManager.Instance.GetPlayedCards())
+        {
+            //prevents infinte loop of effect re-triggers
+            if (card.GetCardType() == CardType.Easter && card.cardName != CardName.BunnyHop)
+            {
+                card.GetEffect().PlayedEffect();
+            }
+        }
+    }
+}
+
+public struct ReindeerEffect : IEffect
+{
+    public void HeldEffect()
+    {
+        //strengthens card points of eqivalent cards
+        //effect is stackable with other reindeer cards
+        foreach (var card in HandManager.Instance.heldCards)
+        {
+            if (card.cardName == CardName.Reindeer)
+            {
+                card.basePts += 50;
+            }
+        }
+    }
+
+    public void PlayedEffect()
+    {
+        int count = 0;
+        int deerPos = 0;
+        int rudolfPos = 0;
+        HolidayCard rudolf;
+        HolidayCard[] cards = HandManager.Instance.GetPlayedCards();
+
+        //if all deers are behind rudolf like the myth then rudolf gets a x2 bonus to its base points
+        //if not then no bonus is awarded
+        foreach (var card in cards)
+        {
+
+            //verify card positions
+            deerPos = (card.cardName == CardName.Reindeer) ? count : deerPos;
+            rudolfPos = (card.cardName == CardName.Rudolf) ? count : rudolfPos;
+            count++;
+
+        }
+
+        //the bonus is stackable if true among all reindeers
+        if (rudolfPos > deerPos) {
+            rudolf = cards[rudolfPos];
+            rudolf.basePts += 200;
+        }
+    }
+}
+
+    public struct ZombieEffect : IEffect
+    {
+        public void HeldEffect() {
+            //reduces score of non-Halloween cards by 75 when held
+            foreach (var card in HandManager.Instance.heldCards)
+            {
+                if(card.GetCardType() != CardType.Halloween){
+                    card.basePts -= 75;
+                }
+            }
+            //triggers secondary held effect
+            Eliminate();
+        }
+        public void PlayedEffect() { 
+            //revives halloween types with half their usual score
+            //if there is a card graveyard that can be used
+            //if not then random halloween cards will be revived
+        }
+
+        //will disappear in hand if there are no other Halloween types
+        private void Eliminate(){
+            bool discardZombie = true;
+            foreach (var card in HandManager.Instance.heldCards)
+            {
+                if (card.GetCardType() == CardType.Halloween){
+                    discardZombie = false;
+                    break;
+                }
+            }
+
+            if (discardZombie)
+            {
+                //remove this card from deck
+                //ideally should be a method in HandManager
+            }
+        }
+    }
+
+    public struct CornucopiaEffect : IEffect
+    {
+        public void HeldEffect()
+        {
+            return;
+        }
+
+        //creates a bonus +500 if both Turkey and Pilgrimage are in hand
+        private bool BonusCheck()
+        {
+            bool hasTurkey = false;
+            bool hasPilgrim = false;
+            foreach(var card in HandManager.Instance.heldCards)
+            {
+                //checks if cards are in hand, if not, use assigned value
+                hasTurkey = (card.cardName == CardName.Turkey) ? true : hasTurkey;
+                hasPilgrim = (card.cardName == CardName.Pilgrimage) ? true : hasPilgrim;
+            }
+
+            //only returns true when both are true
+            return hasTurkey && hasPilgrim;
+        }
+
+        //boosts all Thanksgiving types by +50 points when played
+        public void PlayedEffect()
+        {
+            foreach (var card in HandManager.Instance.GetPlayedCards())
+            {
+                if(card.GetCardType() == CardType.Thanksgiving)
+                {
+                    card.basePts += 50;
+                }
+            }
+
+            if (BonusCheck()){
+                //add a bonus 500 to round score if bonus applies
+            }
+        }
+    }
+
