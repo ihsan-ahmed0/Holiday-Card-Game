@@ -34,6 +34,7 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
     [HideInInspector] public UnityEvent<Card> BeginDragEvent;
     [HideInInspector] public UnityEvent<Card> EndDragEvent;
     [HideInInspector] public UnityEvent<Card, bool> SelectEvent;
+    [HideInInspector] public UnityEvent<Card> ClickEvent;
 
     void Start()
     {
@@ -57,6 +58,9 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (CheckCardGroup() == "CardSlots")
+            return;
+
         BeginDragEvent.Invoke(this);
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         offset = mousePosition - (Vector2)transform.position;
@@ -70,6 +74,9 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (CheckCardGroup() == "CardSlots")
+            return;
+
         EndDragEvent.Invoke(this);
         isDragging = false;
 
@@ -108,11 +115,25 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
         if (pointerUpTime - pointerDownTime > .2f || wasDragged)
             return;
 
-        selected = !selected;
-        ResetPosition();
+        if (CheckCardGroup() == "PlayerHand")
+        {
+            selected = !selected;
+            ResetPosition();
+        }
+        else if (CheckCardGroup() == "CardSlots")
+        {
+            ClickEvent.Invoke(this);
+        }
+        else
+        {
+            Debug.LogError("Card is not in a parent group.");
+        }
+        
     }
 
     public bool IsSelected() {  return selected; }
+
+    public void Deselect() { selected = false; }
 
     private void OnDestroy()
     {
@@ -129,5 +150,19 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
             transform.localPosition = Vector2.zero;
         }
         
+    }
+
+    private string CheckCardGroup()
+    {
+        if (GetComponentInParent<PlayerHand>() != null)
+        {
+            return "PlayerHand";
+        }
+        else if (GetComponentInParent<CardSlots>() != null)
+        {
+            return "CardSlots";
+        }
+
+        return "bruh";
     }
 }

@@ -39,6 +39,7 @@ public class GameManager : MonoBehaviour
 
         playerHand = playerHandObject.GetComponent<PlayerHand>();
         cardSlots = cardSlotsObject.GetComponent<CardSlots>();
+        cardSlots.ReturnToHandEvent.AddListener(ReturnCardToHand);
     }
 
     // Update is called once per frame
@@ -118,6 +119,11 @@ public class GameManager : MonoBehaviour
         cardSlots.AddCards(playedCards);
 
         playerHand.PositionSlots();
+    }
+
+    private void ReturnCardToHand(GameObject cardSlot)
+    {
+        playerHand.AddExistingCard(cardSlot);
     }
 
     private void OnPlayButtonClick()

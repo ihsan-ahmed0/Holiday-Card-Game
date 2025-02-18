@@ -1,15 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CardSlots : MonoBehaviour
 {
+    public UnityEvent<GameObject> ReturnToHandEvent;
+
     private RectTransform rectTransform;
     private List<GameObject> cardSlots;
 
     [Header("Card Interactions")]
-    [SerializeField] private Card draggedCard;
-    [SerializeField] private int draggedCardIndex = -1;
     [SerializeField] private Card hoveredCard;
 
     // Start is called before the first frame update
@@ -22,7 +23,7 @@ public class CardSlots : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void AddCards(List<GameObject> newCardSlots)
@@ -32,23 +33,10 @@ public class CardSlots : MonoBehaviour
             cardSlot.transform.SetParent(transform);
             cardSlot.GetComponentInChildren<Card>().PointerEnterEvent.AddListener(HoverEnter);
             cardSlot.GetComponentInChildren<Card>().PointerExitEvent.AddListener(HoverExit);
-            cardSlot.GetComponentInChildren<Card>().BeginDragEvent.AddListener(BeginDrag);
-            cardSlot.GetComponentInChildren<Card>().EndDragEvent.AddListener(EndDrag);
+            cardSlot.GetComponentInChildren<Card>().ClickEvent.AddListener(CardClick);
             cardSlots.Add(cardSlot);
         }
         PositionSlots();
-    }
-
-    private void BeginDrag(Card card)
-    {
-        draggedCard = card;
-        draggedCardIndex = CardIndex(card);
-    }
-
-    private void EndDrag(Card card)
-    {
-        draggedCard = null;
-        draggedCardIndex = -1;
     }
 
     private void HoverEnter(Card card)
@@ -59,6 +47,16 @@ public class CardSlots : MonoBehaviour
     private void HoverExit(Card card)
     {
         hoveredCard = null;
+    }
+
+    private void CardClick(Card card)
+    {
+        card.GetComponentInChildren<Card>().PointerEnterEvent.RemoveListener(HoverEnter);
+        card.GetComponentInChildren<Card>().PointerExitEvent.RemoveListener(HoverExit);
+        card.GetComponentInChildren<Card>().ClickEvent.RemoveListener(CardClick);
+        ReturnToHandEvent.Invoke(cardSlots[CardIndex(card)]);
+        cardSlots.RemoveAt(CardIndex(card));
+        PositionSlots();
     }
 
     private void PositionSlots()

@@ -58,6 +58,17 @@ public class PlayerHand : MonoBehaviour
         PositionSlots();
     }
 
+    public void AddExistingCard(GameObject cardSlot)
+    {
+        cardSlot.transform.SetParent(transform);
+        cardSlot.GetComponentInChildren<Card>().PointerEnterEvent.AddListener(HoverEnter);
+        cardSlot.GetComponentInChildren<Card>().PointerExitEvent.AddListener(HoverExit);
+        cardSlot.GetComponentInChildren<Card>().BeginDragEvent.AddListener(BeginDrag);
+        cardSlot.GetComponentInChildren<Card>().EndDragEvent.AddListener(EndDrag);
+        cardSlots.Add(cardSlot);
+        PositionSlots();
+    }
+
     public GameObject RemoveCard()
     {
         return null;
@@ -70,12 +81,15 @@ public class PlayerHand : MonoBehaviour
 
         for (int i = 0; i < numCards;)
         {
-            if (cardSlots[i].GetComponentInChildren<Card>().IsSelected())
+            Card currentCard = cardSlots[i].GetComponentInChildren<Card>();
+            if (currentCard.IsSelected())
             {
-                cardSlots[i].GetComponentInChildren<Card>().PointerEnterEvent.RemoveListener(HoverEnter);
-                cardSlots[i].GetComponentInChildren<Card>().PointerExitEvent.RemoveListener(HoverExit);
-                cardSlots[i].GetComponentInChildren<Card>().BeginDragEvent.RemoveListener(BeginDrag);
-                cardSlots[i].GetComponentInChildren<Card>().EndDragEvent.RemoveListener(EndDrag);
+                currentCard.Deselect();
+                currentCard.ResetPosition();
+                currentCard.PointerEnterEvent.RemoveListener(HoverEnter);
+                currentCard.PointerExitEvent.RemoveListener(HoverExit);
+                currentCard.BeginDragEvent.RemoveListener(BeginDrag);
+                currentCard.EndDragEvent.RemoveListener(EndDrag);
 
                 selectedCards.Add(cardSlots[i]);
                 cardSlots.Remove(cardSlots[i]);
