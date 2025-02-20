@@ -96,7 +96,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -167,9 +167,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   instantiateVisual: 1
-  moveSpeedLimit: 5000
-  selected: 0
-  selectionOffset: 10
+  cardImagePrefab: {fileID: 6657809562413146191, guid: 315718289d5db024cac84cf063e71834, type: 3}
+  moveSpeedLimit: 10000
   isHovering: 0
   isDragging: 0
   wasDragged: 0
@@ -192,5 +191,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   SelectEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  ClickEvent:
     m_PersistentCalls:
       m_Calls: []

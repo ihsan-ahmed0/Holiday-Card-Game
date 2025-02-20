@@ -7,13 +7,17 @@ using UnityEngine.UI;
 
 public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler, IPointerEnterHandler, IPointerExitHandler, IPointerUpHandler, IPointerDownHandler
 {
+    [Header("Card Image Parameters")]
     private Canvas canvas;
     private Image imageComponent;
     [SerializeField] private bool instantiateVisual = true;
+    [SerializeField] private GameObject cardImagePrefab;
+    private CardImage cardImage;
+
     private Vector3 offset;
 
     [Header("Movement")]
-    [SerializeField] private float moveSpeedLimit = 5000;
+    [SerializeField] private float moveSpeedLimit = 10000;
 
     [Header("Selection")]
     [HideInInspector] private bool selected;
@@ -43,6 +47,10 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
 
         if (!instantiateVisual)
             return;
+
+        GameObject cardImageObject = Instantiate(cardImagePrefab, GameObject.FindGameObjectWithTag("CardVisuals").transform);
+        cardImage = cardImageObject.GetComponent<CardImage>();
+        cardImage.Init(this);
     }
 
     void Update()
