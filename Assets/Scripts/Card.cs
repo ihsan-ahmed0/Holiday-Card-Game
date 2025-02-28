@@ -30,6 +30,8 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
     public bool isDragging;
     [HideInInspector] public bool wasDragged;
 
+    private IEffect cardEffect;
+
     [Header("Events")]
     [HideInInspector] public UnityEvent<Card> PointerEnterEvent;
     [HideInInspector] public UnityEvent<Card> PointerExitEvent;
@@ -50,7 +52,9 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
 
         GameObject cardImageObject = Instantiate(cardImagePrefab, GameObject.FindGameObjectWithTag("CardVisuals").transform);
         cardImage = cardImageObject.GetComponent<CardImage>();
-        cardImage.Init(this);
+        string cardType = GenerateCard();
+        // set the card effect
+        cardImage.Init(this, cardType);
     }
 
     void Update()
@@ -172,5 +176,89 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
         }
 
         return "bruh";
+    }
+
+    private string GenerateCard()
+    {
+        int rngValue = Random.Range(1, 159);
+
+        if (rngValue >= 1 && rngValue <= 8)
+        {
+            return "EasterBunny";
+        }
+        else if (rngValue >= 9 && rngValue <= 25)
+        {
+            return "Boogeyman";
+        }
+        else if (rngValue >= 26 && rngValue <= 34)
+        {
+            return "Rudolph";
+        }
+        else if (rngValue >= 35 && rngValue <= 44)
+        {
+            return "Turkey";
+        }
+        else if (rngValue >= 45 && rngValue <= 49)
+        {
+            return "Pumpkin";
+        }
+        else if (rngValue >= 50 && rngValue <= 59)
+        {
+            return "Snowflake";
+        }
+        else if (rngValue >= 60 && rngValue <= 63)
+        {
+            return "Sled";
+        }
+        else if (rngValue >= 64 && rngValue <= 70)
+        {
+            return "Zombie";
+        }
+        else if (rngValue >= 71 && rngValue <= 85)
+        {
+            return "BirdsStuffing";
+        }
+        else if (rngValue >= 86 && rngValue <= 93)
+        {
+            return "EasterBunny";
+        }
+        else if (rngValue >= 94 && rngValue <= 103)
+        {
+            return "Reindeer";
+        }
+        else if (rngValue >= 104 && rngValue <= 109)
+        {
+            return "Zombie";
+        }
+        else if (rngValue >= 110 && rngValue <= 118)
+        {
+            return "Cornucopia";
+        }
+        else if (rngValue >= 119 && rngValue <= 124)
+        {
+            return "HarevestMoon";
+        }
+        else if (rngValue >= 125 && rngValue <= 134)
+        {
+            return "JackFrost";
+        }
+        else if (rngValue >= 135 && rngValue <= 137)
+        {
+            return "NewYear";
+        }
+        else if (rngValue >= 138 && rngValue <= 145)
+        {
+            return "Santa";
+        }
+        else if (rngValue >= 145 && rngValue <= 148)
+        {
+            return "Groundhog";
+        }
+        else if (rngValue >= 148 && rngValue <= 158)
+        {
+            return "Witch";
+        }
+
+        return "";
     }
 }

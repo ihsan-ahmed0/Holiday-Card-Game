@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CardImage : MonoBehaviour
 {
     private Card parent;
     private Transform parentTransform;
     private bool initialized = false;
+    private Image cardImage;
 
     [Header("Movement")]
     [SerializeField] private float speed = 30;
@@ -15,6 +17,7 @@ public class CardImage : MonoBehaviour
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
+        cardImage = GetComponent<Image>();
     }
 
     // Update is called once per frame
@@ -27,10 +30,11 @@ public class CardImage : MonoBehaviour
         Rotate();
     }
 
-    public void Init(Card card)
+    public void Init(Card card, string cardType)
     {
         if (initialized) return;
-
+        Debug.Log(cardType);
+        cardImage.sprite = Resources.Load($"CardArt/BirdsStuffing.png") as Sprite;
         parent = card;
         parentTransform = card.transform;
         initialized = true;
