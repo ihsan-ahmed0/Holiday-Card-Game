@@ -7,8 +7,8 @@ public class EffectFinder
 {
     public static IEffect Find(CardName name) => name switch
     {
-        CardName.Rudolf => new RudolfEffect(),
-        CardName.EasterEgg => new EasterEggEffect(),
+        CardName.Rudolf => new RudolphEffect(),
+        CardName.EasterEgg => new EasterBunnyEffect(),
         CardName.Boogeyman => new BoogeymanEffect(),
         CardName.Pilgrimage => new PilgrimageEffect(),
         CardName.Turkey => new TurkeyEffect(),

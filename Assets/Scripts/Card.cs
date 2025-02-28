@@ -53,7 +53,7 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
         GameObject cardImageObject = Instantiate(cardImagePrefab, GameObject.FindGameObjectWithTag("CardVisuals").transform);
         cardImage = cardImageObject.GetComponent<CardImage>();
         string cardType = GenerateCard();
-        // set the card effect
+        SetEffect(cardType);
         cardImage.Init(this, cardType);
     }
 
@@ -178,6 +178,82 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
         return "bruh";
     }
 
+    private void SetEffect(string cardType)
+    {
+        if (cardType == "EasterBunny")
+        {
+            cardEffect = new EasterBunnyEffect();
+        }
+        else if (cardType == "Boogeyman")
+        {
+            cardEffect = new BoogeymanEffect();
+        }
+        else if (cardType == "Rudolph")
+        {
+            cardEffect = new RudolphEffect();
+        }
+        else if (cardType == "Turkey")
+        {
+            cardEffect = new TurkeyEffect();
+        }
+        else if (cardType == "Pumpkin")
+        {
+            cardEffect = new PumpkinEffect();
+        }
+        else if (cardType == "Snowflake")
+        {
+            cardEffect = new SnowflakeEffect();
+        }
+        else if (cardType == "Sled")
+        {
+            cardEffect = new BobsledEffect();
+        }
+        else if (cardType == "Zombie")
+        {
+            cardEffect = new ZombieEffect();
+        }
+        else if (cardType == "BirdsStuffing")
+        {
+            cardEffect = new StuffingEffect();
+        }
+        else if (cardType == "Pilgrimage")
+        {
+            cardEffect = new PilgrimageEffect();
+        }
+        else if (cardType == "Reindeer")
+        {
+            cardEffect = new ReindeerEffect();
+        }
+        else if (cardType == "Cornucopia")
+        {
+            cardEffect = new CornucopiaEffect();
+        }
+        else if (cardType == "HarvestMoon")
+        {
+            cardEffect = new HarvestMoonEffect();
+        }
+        else if (cardType == "JackFrost")
+        {
+            cardEffect = new JackFrostEffect();
+        }
+        else if (cardType == "NewYear")
+        {
+            cardEffect = new NewYearEffect();
+        }
+        else if (cardType == "Santa")
+        {
+            cardEffect = new SantaEffect();
+        }
+        else if (cardType == "Groundhog")
+        {
+            cardEffect = new GroundhogEffect();
+        }
+        else if (cardType == "Witch")
+        {
+            cardEffect = new WitchEffect();
+        }
+    }
+
     private string GenerateCard()
     {
         int rngValue = Random.Range(1, 159);
@@ -220,7 +296,7 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
         }
         else if (rngValue >= 86 && rngValue <= 93)
         {
-            return "EasterBunny";
+            return "Pilgrimage";
         }
         else if (rngValue >= 94 && rngValue <= 103)
         {
@@ -236,7 +312,7 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
         }
         else if (rngValue >= 119 && rngValue <= 124)
         {
-            return "HarevestMoon";
+            return "HarvestMoon";
         }
         else if (rngValue >= 125 && rngValue <= 134)
         {

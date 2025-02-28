@@ -9,7 +9,7 @@ public interface IEffect
     public void HeldEffect();
 }
 
-public struct EasterEggEffect : IEffect
+public struct EasterBunnyEffect : IEffect
 {
     public void HeldEffect()
     {
@@ -24,7 +24,7 @@ public struct EasterEggEffect : IEffect
     }
 }
 
-public struct RudolfEffect : IEffect
+public struct RudolphEffect : IEffect
 {
     public void HeldEffect()
     {
@@ -335,3 +335,80 @@ public struct ReindeerEffect : IEffect
         }
     }
 
+public struct HarvestMoonEffect : IEffect
+{
+    public void PlayedEffect()
+    {
+
+    }
+
+    public void HeldEffect()
+    {
+    
+    }
+}
+
+public struct JackFrostEffect : IEffect
+{
+    public void PlayedEffect()
+    {
+
+    }
+
+    public void HeldEffect()
+    {
+
+    }
+}
+
+public struct NewYearEffect : IEffect
+{
+    public void PlayedEffect()
+    {
+
+    }
+
+    public void HeldEffect()
+    {
+
+    }
+}
+
+public struct SantaEffect : IEffect
+{
+    public void PlayedEffect()
+    {
+
+    }
+
+    public void HeldEffect()
+    {
+
+    }
+}
+
+public struct GroundhogEffect : IEffect
+{
+    public void PlayedEffect()
+    {
+
+    }
+
+    public void HeldEffect()
+    {
+
+    }
+}
+
+public struct WitchEffect : IEffect
+{
+    public void PlayedEffect()
+    {
+
+    }
+
+    public void HeldEffect()
+    {
+
+    }
+}
