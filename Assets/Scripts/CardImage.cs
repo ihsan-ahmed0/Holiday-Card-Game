@@ -34,7 +34,8 @@ public class CardImage : MonoBehaviour
     {
         if (initialized) return;
         Debug.Log(cardType);
-        cardImage.sprite = Resources.Load($"CardArt/BirdsStuffing.png") as Sprite;
+        cardImage = GetComponent<Image>();
+        cardImage.sprite = Resources.Load<Sprite>($"CardArt/{cardType}");
         parent = card;
         parentTransform = card.transform;
         initialized = true;
