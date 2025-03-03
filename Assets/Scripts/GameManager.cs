@@ -67,6 +67,13 @@ public class GameManager : MonoBehaviour
     public void addPoints(int x)
     {
         currentPoints += x;
+        Debug.Log(currentPoints);
+    }
+
+    public void addGoalPoints(int x)
+    {
+        goalPoints += x;
+        Debug.Log(currentPoints);
     }
 
     public void multiplyPoints(float x)
@@ -83,7 +90,7 @@ public class GameManager : MonoBehaviour
         loseCanvas.SetActive(false);
     }
 
-    void endTurn()
+    public void endTurn()
     {
         if (currentPoints >= goalPoints)
         {
@@ -101,7 +108,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    void updatePoints()
+    public void updatePoints()
     {
         currentPointsText.text = "Points: " + currentPoints;
         goalPointsText.text = "Goal: " + goalPoints;

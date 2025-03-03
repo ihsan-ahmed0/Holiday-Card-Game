@@ -18,6 +18,7 @@ public class PlayerHand : MonoBehaviour
     [SerializeField] private Card hoveredCard;
 
     private bool swappingCards = false;
+    private GameManager gameManager;
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +29,8 @@ public class PlayerHand : MonoBehaviour
         cardSlots.Add(Instantiate(cardSlotPrefab, transform));
         cardSlots.Add(Instantiate(cardSlotPrefab, transform));
         cardSlots.Add(Instantiate(cardSlotPrefab, transform));
+
+        gameManager = GameObject.FindGameObjectWithTag("GameManager")?.GetComponent<GameManager>();
 
         foreach (GameObject cardSlot in cardSlots)
         {
@@ -90,6 +93,10 @@ public class PlayerHand : MonoBehaviour
                 currentCard.PointerExitEvent.RemoveListener(HoverExit);
                 currentCard.BeginDragEvent.RemoveListener(BeginDrag);
                 currentCard.EndDragEvent.RemoveListener(EndDrag);
+
+                // Trigger card effect
+                currentCard.PlayCard();
+                gameManager.updatePoints();
 
                 selectedCards.Add(cardSlots[i]);
                 cardSlots.Remove(cardSlots[i]);

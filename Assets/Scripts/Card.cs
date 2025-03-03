@@ -30,7 +30,7 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
     public bool isDragging;
     [HideInInspector] public bool wasDragged;
 
-    private IEffect cardEffect;
+    public IEffect cardEffect;
 
     [Header("Events")]
     [HideInInspector] public UnityEvent<Card> PointerEnterEvent;
@@ -42,10 +42,13 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
     [HideInInspector] public UnityEvent<Card, bool> SelectEvent;
     [HideInInspector] public UnityEvent<Card> ClickEvent;
 
+    private GameManager gameManager;
+
     void Start()
     {
         canvas = GetComponentInParent<Canvas>();
         imageComponent = GetComponent<Image>();
+        gameManager = GameObject.FindGameObjectWithTag("GameManager")?.GetComponent<GameManager>();
 
         if (!instantiateVisual)
             return;
@@ -65,6 +68,18 @@ public class Card : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHand
             Vector2 direction = (targetPosition - (Vector2)transform.position).normalized;
             Vector2 velocity = direction * Mathf.Min(moveSpeedLimit, Vector2.Distance(transform.position, targetPosition) / Time.deltaTime);
             transform.Translate(velocity * Time.deltaTime);
+        }
+    }
+
+    public void PlayCard()
+    {
+        if (cardEffect != null)
+        {
+            cardEffect.PlayedEffect(gameManager);
+        }
+        else
+        {
+            Debug.Log("No card effect.");
         }
     }
 
