@@ -16,7 +16,6 @@ public class EffectFinder
         CardName.Snowflake => new SnowflakeEffect(),
         CardName.Stuffing => new StuffingEffect(),
         CardName.Bobsled => new BobsledEffect(),
-        CardName.BunnyHop => new BunnyHopEffect(),
         CardName.Reindeer => new ReindeerEffect(),
         CardName.Zombie => new ZombieEffect(),
         CardName.Cornucopia => new CornucopiaEffect(),
