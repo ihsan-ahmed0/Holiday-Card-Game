@@ -2,19 +2,36 @@ using System;
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.VisualScripting;
 using UnityEngine;
-using System;
 
+public enum Holiday
+{
+    Christmas,
+    Halloween,
+    Thanksgiving,
+    Easter,
+    Special
+}
 
 public interface IEffect
 {
+    // Base points of card.
+    int BasePoints { get; }
+
+    // Holiday type of card.
+    Holiday Holiday { get; }
+
     // effect only triggers when card is Played
     public void PlayedEffect(GameManager gameManager);
     // effect is only triggered when card is Held in hand
     public void HeldEffect(GameManager gameManager);
 }
 
-public struct EasterBunnyEffect : IEffect
+public class EasterBunnyEffect : IEffect
 {
+    public int BasePoints { get; }
+
+    public Holiday Holiday { get; }
+
     public void HeldEffect(GameManager gameManager)
     {
         // Easter egg multiplies total score by x1.5
@@ -27,10 +44,20 @@ public struct EasterBunnyEffect : IEffect
         // Does nothing when played
         return;
     }
+
+    public EasterBunnyEffect()
+    {
+        BasePoints = 0;
+        Holiday = Holiday.Easter;
+    }
 }
 
-public struct RudolphEffect : IEffect
+public class RudolphEffect : IEffect
 {
+    public int BasePoints { get; }
+
+    public Holiday Holiday { get; }
+
     public void HeldEffect(GameManager gameManager)
     {
         return;
@@ -58,10 +85,20 @@ public struct RudolphEffect : IEffect
         // send the points to whatever handles points
         gameManager.addPoints(pointsScored + 100);
     }
+
+    public RudolphEffect()
+    {
+        BasePoints = 0;
+        Holiday = Holiday.Easter;
+    }
 }
 
-public struct BoogeymanEffect : IEffect
+public class BoogeymanEffect : IEffect
 {
+    public int BasePoints { get; }
+
+    public Holiday Holiday { get; }
+
     public void HeldEffect(GameManager gameManager)
     {
         // add 100 to score for each played Halloween type
@@ -87,10 +124,20 @@ public struct BoogeymanEffect : IEffect
 
         gameManager.addPoints(numHalloween * 100 + numNonHalloween * (-100) + 150);
     }
+
+    public BoogeymanEffect()
+    {
+        BasePoints = 0;
+        Holiday = Holiday.Easter;
+    }
 }
 
-public struct PilgrimageEffect : IEffect
+public class PilgrimageEffect : IEffect
 {
+    public int BasePoints { get; }
+
+    public Holiday Holiday { get; }
+
     public void HeldEffect(GameManager gameManager)
     {
         return;
@@ -109,10 +156,20 @@ public struct PilgrimageEffect : IEffect
 
         gameManager.addPoints(50);
     }
+
+    public PilgrimageEffect()
+    {
+        BasePoints = 0;
+        Holiday = Holiday.Easter;
+    }
 }
 
-public struct TurkeyEffect : IEffect
+public class TurkeyEffect : IEffect
 {
+    public int BasePoints { get; }
+
+    public Holiday Holiday { get; }
+
     public void HeldEffect(GameManager gameManager)
     {
         // Gains +50 for every turn not played when in hand
@@ -131,10 +188,20 @@ public struct TurkeyEffect : IEffect
         gameManager.addPoints(50);
         return;
     }
+
+    public TurkeyEffect()
+    {
+        BasePoints = 0;
+        Holiday = Holiday.Easter;
+    }
 }
 
-public struct PumpkinEffect : IEffect
+public class PumpkinEffect : IEffect
 {
+    public int BasePoints { get; }
+
+    public Holiday Holiday { get; }
+
     public void HeldEffect(GameManager gameManager)
     {
         //Holds a base value of -300 to be a hindrance
@@ -153,10 +220,20 @@ public struct PumpkinEffect : IEffect
         //scores whatever points are left on the card
         return;
     }
+
+    public PumpkinEffect()
+    {
+        BasePoints = 0;
+        Holiday = Holiday.Easter;
+    }
 }
 
-public struct SnowflakeEffect : IEffect
+public class SnowflakeEffect : IEffect
 {
+    public int BasePoints { get; }
+
+    public Holiday Holiday { get; }
+
     public void HeldEffect(GameManager gameManager)
     {
         return;
@@ -176,10 +253,20 @@ public struct SnowflakeEffect : IEffect
         gameManager.addPoints(numChristmas * 100);
         return;
     }
+
+    public SnowflakeEffect()
+    {
+        BasePoints = 0;
+        Holiday = Holiday.Easter;
+    }
 }
 
-public struct StuffingEffect : IEffect
+public class StuffingEffect : IEffect
 {
+    public int BasePoints { get; }
+
+    public Holiday Holiday { get; }
+
     public void HeldEffect(GameManager gameManager)
     {
         return;
@@ -200,10 +287,20 @@ public struct StuffingEffect : IEffect
 
         gameManager.addPoints(isThanksgiving * 100 + 50);
     }
+
+    public StuffingEffect()
+    {
+        BasePoints = 0;
+        Holiday = Holiday.Easter;
+    }
 }
 
-public struct BobsledEffect : IEffect
+public class BobsledEffect : IEffect
 {
+    public int BasePoints { get; }
+
+    public Holiday Holiday { get; }
+
     public void HeldEffect(GameManager gameManager)
     {
         return;
@@ -218,8 +315,12 @@ public struct BobsledEffect : IEffect
     }
 }
 
-public struct BunnyHopEffect : IEffect
+public class BunnyHopEffect : IEffect
 {
+    public int BasePoints { get; }
+
+    public Holiday Holiday { get; }
+
     public void HeldEffect(GameManager gameManager)
     {
         return;
@@ -244,8 +345,12 @@ public struct BunnyHopEffect : IEffect
     }
 }
 
-public struct ReindeerEffect : IEffect
+public class ReindeerEffect : IEffect
 {
+    public int BasePoints { get; }
+
+    public Holiday Holiday { get; }
+
     public void HeldEffect(GameManager gameManager)
     {
         //strengthens card points of eqivalent cards
@@ -291,91 +396,103 @@ public struct ReindeerEffect : IEffect
     }
 }
 
-    public struct ZombieEffect : IEffect
-    {
-        public void HeldEffect(GameManager gameManager) {
-            //reduces score of non-Halloween cards by 75 when held
-            foreach (var card in HandManager.Instance.heldCards)
-            {
-                if(card.GetCardType() != CardType.Halloween){
-                    card.basePts -= 75;
-                }
-            }
-            //triggers secondary held effect
-            Eliminate();
-        }
-        public void PlayedEffect(GameManager gameManager) { 
-            int revivedPoints = 0;
-
-        //revives halloween types with half their usual score
-        //if there is a card graveyard that can be used
-        //if not then random halloween cards will be revived
-
-            gameManager.addPoints(revivedPoints + 25);
-        }
-
-        //will disappear in hand if there are no other Halloween types
-        private void Eliminate(){
-            bool discardZombie = true;
-            foreach (var card in HandManager.Instance.heldCards)
-            {
-                if (card.GetCardType() == CardType.Halloween){
-                    discardZombie = false;
-                    break;
-                }
-            }
-
-            if (discardZombie)
-            {
-                //remove this card from deck
-                //ideally should be a method in HandManager
-            }
-        }
-    }
-
-    public struct CornucopiaEffect : IEffect
-    {
-        public void HeldEffect(GameManager gameManager)
-        {
-            return;
-        }
-
-        //creates a bonus +500 if both Turkey and Pilgrimage are in hand
-        private bool BonusCheck()
-        {
-            bool hasTurkey = false;
-            bool hasPilgrim = false;
-            foreach(var card in HandManager.Instance.heldCards)
-            {
-                //checks if cards are in hand, if not, use assigned value
-                hasTurkey = (card.cardName == CardName.Turkey) ? true : hasTurkey;
-                hasPilgrim = (card.cardName == CardName.Pilgrimage) ? true : hasPilgrim;
-            }
-
-            //only returns true when both are true
-            return hasTurkey && hasPilgrim;
-        }
-
-        //boosts all Thanksgiving types by +50 points when played
-        public void PlayedEffect(GameManager gameManager)
-        {
-            foreach (var card in HandManager.Instance.GetPlayedCards())
-            {
-                if(card.GetCardType() == CardType.Thanksgiving)
-                {
-                    card.basePts += 50;
-                }
-            }
-
-            if (BonusCheck()){
-                gameManager.addPoints(525);
-                //add a bonus 500 to round score if bonus applies
-            }
-        }
-    }
-
-public struct HarvestMoonEffect : IEffect
+public class ZombieEffect : IEffect
 {
+    public int BasePoints { get; }
+
+    public Holiday Holiday { get; }
+
+    public void HeldEffect(GameManager gameManager) {
+        //reduces score of non-Halloween cards by 75 when held
+        foreach (var card in HandManager.Instance.heldCards)
+        {
+            if(card.GetCardType() != CardType.Halloween){
+                card.basePts -= 75;
+            }
+        }
+        //triggers secondary held effect
+        Eliminate();
+    }
+    public void PlayedEffect(GameManager gameManager) { 
+        int revivedPoints = 0;
+
+    //revives halloween types with half their usual score
+    //if there is a card graveyard that can be used
+    //if not then random halloween cards will be revived
+
+        gameManager.addPoints(revivedPoints + 25);
+    }
+
+    //will disappear in hand if there are no other Halloween types
+    private void Eliminate(){
+        bool discardZombie = true;
+        foreach (var card in HandManager.Instance.heldCards)
+        {
+            if (card.GetCardType() == CardType.Halloween){
+                discardZombie = false;
+                break;
+            }
+        }
+
+        if (discardZombie)
+        {
+            //remove this card from deck
+            //ideally should be a method in HandManager
+        }
+    }
+}
+
+public class CornucopiaEffect : IEffect
+{
+    public int BasePoints { get; }
+
+    public Holiday Holiday { get; }
+
+    public void HeldEffect(GameManager gameManager)
+    {
+        return;
+    }
+
+    //creates a bonus +500 if both Turkey and Pilgrimage are in hand
+    private bool BonusCheck()
+    {
+        bool hasTurkey = false;
+        bool hasPilgrim = false;
+        foreach(var card in HandManager.Instance.heldCards)
+        {
+            //checks if cards are in hand, if not, use assigned value
+            hasTurkey = (card.cardName == CardName.Turkey) ? true : hasTurkey;
+            hasPilgrim = (card.cardName == CardName.Pilgrimage) ? true : hasPilgrim;
+        }
+
+        //only returns true when both are true
+        return hasTurkey && hasPilgrim;
+    }
+
+    //boosts all Thanksgiving types by +50 points when played
+    public void PlayedEffect(GameManager gameManager)
+    {
+        foreach (var card in HandManager.Instance.GetPlayedCards())
+        {
+            if(card.GetCardType() == CardType.Thanksgiving)
+            {
+                card.basePts += 50;
+            }
+        }
+
+        if (BonusCheck()){
+            gameManager.addPoints(525);
+            //add a bonus 500 to round score if bonus applies
+        }
+    }
+}
+
+public class HarvestMoonEffect : IEffect
+{
+    public int BasePoints { get; }
+
+    public Holiday Holiday { get; }
+
     public void HeldEffect(GameManager gameManager)
     {
         
@@ -397,8 +514,12 @@ public struct HarvestMoonEffect : IEffect
     }
 }
 
-public struct JackFrostEffect : IEffect
+public class JackFrostEffect : IEffect
 {
+    public int BasePoints { get; }
+
+    public Holiday Holiday { get; }
+
     public void HeldEffect(GameManager gameManager)
     {
 
@@ -425,8 +546,12 @@ public struct JackFrostEffect : IEffect
     }
 }
 
-public struct NewYearEffect : IEffect
+public class NewYearEffect : IEffect
 {
+    public int BasePoints { get; }
+
+    public Holiday Holiday { get; }
+
     public void HeldEffect(GameManager gameManager)
     {
 
@@ -445,8 +570,12 @@ public struct NewYearEffect : IEffect
     }
 }
 
-public struct SantaEffect : IEffect
+public class SantaEffect : IEffect
 {
+    public int BasePoints { get; }
+
+    public Holiday Holiday { get; }
+
     public void HeldEffect(GameManager gameManager)
     {
         // Eliminate penalties of all cards
@@ -455,22 +584,29 @@ public struct SantaEffect : IEffect
     public void PlayedEffect(GameManager gameManager)
     {
         int numHalloween = 0;
-        
+
         foreach (var card in HandManager.Instance.GetPlayedCards())
         {
-            if (card.GetCardType() == CardType.Halloween){
-            if (card.GetCardType() == CardType.Halloween){
-                numHalloween += 1;
-            }
-            
-        }
+            if (card.GetCardType() == CardType.Halloween)
+            {
+                if (card.GetCardType() == CardType.Halloween)
+                {
+                    numHalloween += 1;
+                }
 
-        gameManager.addPoints(numHalloween * (-150) + 150);
+            }
+
+            gameManager.addPoints(numHalloween * (-150) + 150);
+        }
     }
 }
 
-public struct GroundhogEffect : IEffect
+public class GroundhogEffect : IEffect
 {
+    public int BasePoints { get; }
+
+    public Holiday Holiday { get; }
+
     public void HeldEffect(GameManager gameManager)
     {
 
@@ -486,8 +622,12 @@ public struct GroundhogEffect : IEffect
     }
 }
 
-public struct WitchEffect : IEffect
+public class WitchEffect : IEffect
 {
+    public int BasePoints { get; }
+
+    public Holiday Holiday { get; }
+
     public void HeldEffect(GameManager gameManager)
     {
 
@@ -505,6 +645,6 @@ public struct WitchEffect : IEffect
         // rightCard.PlayCard();
 
         // Only adds base 25 pts for now
-        gameManager.addPoints(75);;
+        gameManager.addPoints(75);
     }
 }

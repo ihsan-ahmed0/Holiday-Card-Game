@@ -10,7 +10,13 @@ public class HandManager : MonoBehaviour
     private HolidayCard[] playedCards = new HolidayCard[0];
     public List<HolidayCard> heldCards;
     private GameManager gameManager;
-    
+    private CardSlots cardSlots;
+    private PlayerHand hand;
+
+    [Header("Card Groups")]
+    [SerializeField] GameObject cardSlotsObject;
+    [SerializeField] GameObject playerHandObject;
+
     void Awake()
     {
         if (Instance == null) {
@@ -21,6 +27,12 @@ public class HandManager : MonoBehaviour
         }
         gameManager = GameObject.FindGameObjectWithTag("GameManager")?.GetComponent<GameManager>();
             
+    }
+
+    private void Start()
+    {
+        hand = playerHandObject.GetComponent<PlayerHand>();
+        cardSlots = cardSlotsObject.GetComponent<CardSlots>();
     }
 
     public void TriggerHeldCards()
