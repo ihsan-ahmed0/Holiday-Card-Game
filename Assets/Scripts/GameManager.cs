@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     [Header("Game Data")]
     [SerializeField] private int currentPoints = 0;
     [SerializeField] private int goalPoints = 100;
-    [SerializeField] private float goalPointIncrements = 1.5f;
+    [SerializeField] private float goalPointIncrements = 1.25f;
     [SerializeField] private int turn = 0;
 
     [Header("UI Elements")]
@@ -19,10 +19,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TMP_Text goalPointsText;
     [SerializeField] private Button addCardButton;
     [SerializeField] private Button playCardsButton;
+    [SerializeField] private Button endTurnButton;
 
     [Header("Card Groups")]
     [SerializeField] private GameObject playerHandObject;
     [SerializeField] private GameObject cardSlotsObject;
+    private List<GameObject> cardsInPlay = new List<GameObject>();
+
 
     private PlayerHand playerHand;
     private CardSlots cardSlots;
@@ -36,6 +39,7 @@ public class GameManager : MonoBehaviour
 
         addCardButton.onClick.AddListener(OnAddButtonClick);
         playCardsButton.onClick.AddListener(OnPlayButtonClick);
+        endTurnButton.onClick.AddListener(OnEndTurnClick);
 
         playerHand = playerHandObject.GetComponent<PlayerHand>();
         cardSlots = cardSlotsObject.GetComponent<CardSlots>();
@@ -45,23 +49,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            addPoints(10);
-            updatePoints();
-        }
-
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            multiplyPoints(1.5f);
-            updatePoints();
-        }
-
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            endTurn();
-            updatePoints();
-        }
+        
     }
 
     public void addPoints(int x)
@@ -73,7 +61,6 @@ public class GameManager : MonoBehaviour
     public void addGoalPoints(int x)
     {
         goalPoints += x;
-        Debug.Log(currentPoints);
     }
 
     public void multiplyPoints(float x)
@@ -85,7 +72,7 @@ public class GameManager : MonoBehaviour
     {
         currentPoints = 0;
         goalPoints = 100;
-        goalPointIncrements = 1.5f;
+        goalPointIncrements = 1.25f;
         turn = 0;
         loseCanvas.SetActive(false);
     }
@@ -97,6 +84,7 @@ public class GameManager : MonoBehaviour
             currentPoints = 0;
             goalPoints = Mathf.CeilToInt(goalPoints * goalPointIncrements);
             Debug.Log("You have enough points to move on! New point goal: " + goalPoints);
+            updatePoints();
             turn += 1;
         }
         else
@@ -123,9 +111,26 @@ public class GameManager : MonoBehaviour
     {
         List<GameObject> playedCards = playerHand.PlayCards();
 
-        cardSlots.AddCards(playedCards);
+        foreach (GameObject card in playedCards)
+        {
+            cardsInPlay.Add(card);
+        }
+
+        cardSlots.AddCards(playedCards); 
 
         playerHand.PositionSlots();
+
+
+        // print played cards
+        Debug.Log("Cards in play:");
+        foreach (GameObject cardSlot in cardsInPlay)
+        {
+            Card card = cardSlot.GetComponentInChildren<Card>();
+            if (card != null)
+            {
+                Debug.Log(card.cardEffect);
+            }
+        }
     }
 
     private void ReturnCardToHand(GameObject cardSlot)
@@ -141,5 +146,31 @@ public class GameManager : MonoBehaviour
     private void OnAddButtonClick()
     {
         DrawCard();
+    }
+
+    private void OnEndTurnClick()
+    {
+        // Prints held cards
+        Debug.Log("Player's Hand:");
+        foreach (GameObject cardSlot in playerHand.GetCardSlots())
+        {
+            Card card = cardSlot.GetComponentInChildren<Card>();
+            if (card != null)
+            {
+                Debug.Log("Card in Hand: " + card.cardEffect);
+            }
+        }
+
+        // Print cards in play
+        Debug.Log("Cards in Play:");
+        foreach (GameObject cardSlot in cardsInPlay)
+        {
+            Card card = cardSlot.GetComponentInChildren<Card>();
+            if (card != null)
+            {
+                Debug.Log("Card in Play: " + card.cardEffect);
+            }
+        }
+        // endTurn();
     }
 }

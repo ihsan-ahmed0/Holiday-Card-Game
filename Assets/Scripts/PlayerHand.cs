@@ -94,10 +94,6 @@ public class PlayerHand : MonoBehaviour
                 currentCard.BeginDragEvent.RemoveListener(BeginDrag);
                 currentCard.EndDragEvent.RemoveListener(EndDrag);
 
-                // Trigger card effect
-                currentCard.PlayCard();
-                gameManager.updatePoints();
-
                 selectedCards.Add(cardSlots[i]);
                 cardSlots.Remove(cardSlots[i]);
                 numCards = cardSlots.Count;
@@ -214,5 +210,9 @@ public class PlayerHand : MonoBehaviour
             }
         }
         return -1;
+    }
+
+    public List<GameObject> GetCardSlots(){
+        return cardSlots;
     }
 }
