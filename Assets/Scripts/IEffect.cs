@@ -313,6 +313,12 @@ public class BobsledEffect : IEffect
         gameManager.addPoints(50);
         gameManager.addGoalPoints(-500);
     }
+
+    public BobsledEffect()
+    {
+        BasePoints = 0;
+        Holiday = Holiday.Easter;
+    }
 }
 
 public class BunnyHopEffect : IEffect
@@ -342,6 +348,12 @@ public class BunnyHopEffect : IEffect
         }
 
         gameManager.addPoints(prevPoints);
+    }
+
+    public BunnyHopEffect()
+    {
+        BasePoints = 0;
+        Holiday = Holiday.Easter;
     }
 }
 
@@ -394,6 +406,12 @@ public class ReindeerEffect : IEffect
         gameManager.addPoints(25);
         gameManager.addPoints(25);
     }
+
+    public ReindeerEffect()
+    {
+        BasePoints = 0;
+        Holiday = Holiday.Easter;
+    }
 }
 
 public class ZombieEffect : IEffect
@@ -440,6 +458,12 @@ public class ZombieEffect : IEffect
             //ideally should be a method in HandManager
         }
     }
+
+    public ZombieEffect()
+    {
+        BasePoints = 0;
+        Holiday = Holiday.Easter;
+    }
 }
 
 public class CornucopiaEffect : IEffect
@@ -485,6 +509,12 @@ public class CornucopiaEffect : IEffect
             //add a bonus 500 to round score if bonus applies
         }
     }
+
+    public CornucopiaEffect()
+    {
+        BasePoints = 0;
+        Holiday = Holiday.Easter;
+    }
 }
 
 public class HarvestMoonEffect : IEffect
@@ -511,6 +541,12 @@ public class HarvestMoonEffect : IEffect
         }
 
         gameManager.addPoints(unplayedThanksgiving * 100 + 75);
+    }
+
+    public HarvestMoonEffect()
+    {
+        BasePoints = 0;
+        Holiday = Holiday.Easter;
     }
 }
 
@@ -544,6 +580,12 @@ public class JackFrostEffect : IEffect
 
         gameManager.addPoints(numChristmas * (-100) + christmasPoints * 2 + 75);
     }
+
+    public JackFrostEffect()
+    {
+        BasePoints = 0;
+        Holiday = Holiday.Easter;
+    }
 }
 
 public class NewYearEffect : IEffect
@@ -567,6 +609,12 @@ public class NewYearEffect : IEffect
         }
 
         gameManager.addPoints((int) Math.Ceiling(numCardsPlayed * 0.5) + 90);
+    }
+
+    public NewYearEffect()
+    {
+        BasePoints = 0;
+        Holiday = Holiday.Easter;
     }
 }
 
@@ -599,6 +647,12 @@ public class SantaEffect : IEffect
             gameManager.addPoints(numHalloween * (-150) + 150);
         }
     }
+
+    public SantaEffect()
+    {
+        BasePoints = 0;
+        Holiday = Holiday.Easter;
+    }
 }
 
 public class GroundhogEffect : IEffect
@@ -619,6 +673,12 @@ public class GroundhogEffect : IEffect
 
 
         gameManager.addPoints(prevRoundScore + numTurnsNotPlayed * 100 + 60);
+    }
+
+    public GroundhogEffect()
+    {
+        BasePoints = 0;
+        Holiday = Holiday.Easter;
     }
 }
 
@@ -646,5 +706,11 @@ public class WitchEffect : IEffect
 
         // Only adds base 25 pts for now
         gameManager.addPoints(75);
+    }
+
+    public WitchEffect()
+    {
+        BasePoints = 0;
+        Holiday = Holiday.Easter;
     }
 }
