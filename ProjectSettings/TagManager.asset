@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - CardVisuals
+  - GameManager
   layers:
   - Default
   - TransparentFX

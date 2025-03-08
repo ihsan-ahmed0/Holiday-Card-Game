@@ -1,6 +1,7 @@
 using Unity.Collections.LowLevel.Unsafe;
 using Unity.VisualScripting;
 using UnityEngine;
+using System;
 
 
 public interface IEffect
@@ -284,7 +285,7 @@ public struct ReindeerEffect : IEffect
         }
 
         // Only adds base 25 pts for now
-        gameManager.addPoints(25)
+        gameManager.addPoints(25);
     }
 }
 
@@ -308,7 +309,7 @@ public struct ReindeerEffect : IEffect
             //if there is a card graveyard that can be used
             //if not then random halloween cards will be revived
 
-            gameManager.addPoints(revivedPoints + 25)
+            gameManager.addPoints(revivedPoints + 25);
         }
 
         //will disappear in hand if there are no other Halloween types
@@ -455,7 +456,7 @@ public struct SantaEffect : IEffect
         
         foreach (var card in HandManager.Instance.GetPlayedCards())
         {
-            if (card.GetCardType == CardType.Halloween){
+            if (card.GetCardType() == CardType.Halloween){
                 numHalloween += 1;
             }
             
@@ -491,16 +492,16 @@ public struct WitchEffect : IEffect
 
     public void PlayedEffect(GameManager gameManager)
     {
-        HolidayCard leftCard;
-        HolidayCard rightCard;
+        // HolidayCard leftCard;
+        // HolidayCard rightCard;
 
-        // finds nearby halloween cards
+        // // finds nearby halloween cards
         
-        // implement some checking to prevent infinite loops if either card is a witch card
-        leftCard.PlayCard();
-        rightCard.PlayCard();
+        // // implement some checking to prevent infinite loops if either card is a witch card
+        // leftCard.PlayCard();
+        // rightCard.PlayCard();
 
         // Only adds base 25 pts for now
-        gameManager.addPoints(75)
+        gameManager.addPoints(75);
     }
 }
